@@ -28,7 +28,7 @@
 	"extra": {
 		"laravel": {
 			"providers": [
-				"Penobit\\CrashReporter\\Providers\\XceptionServiceProvider"
+				"Penobit\\CrashReporter\\Providers\\ServiceProvider"
 			]
 		}
 	}
