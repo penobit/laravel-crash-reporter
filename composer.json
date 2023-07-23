@@ -1,0 +1,35 @@
+{
+	"name": "penobit/crash-reporter",
+	"description": "Penobit's Crash Reporter will notify crash reports via email and HTTP requests to your api.",
+	"type": "library",
+	"keywords": [
+		"crash",
+		"reporter",
+		"report",
+		"crash-reporter",
+		"email",
+		"api"
+	],
+	"require": {
+		"illuminate/support": "^10.15.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"Penobit\\CrashReporter\\": "src/"
+		}
+	},
+	"authors": [
+		{
+			"name": "Penobit",
+			"email": "info@penobit.com"
+		}
+	],
+	"minimum-stability": "dev",
+	"extra": {
+		"laravel": {
+			"providers": [
+				"Penobit\\CrashReporter\\Providers\\XceptionServiceProvider"
+			]
+		}
+	}
+}
