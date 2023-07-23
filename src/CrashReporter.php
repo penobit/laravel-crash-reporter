@@ -6,15 +6,11 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 
 class CrashReporter {
-    public static function getTo(): string {
-        return config('crash-reporter.to', 'crash-reporter@penobit.com');
-    }
-
     public static function handle(\Throwable $exception) {
         /** @var \Illuminate\Http\Request $request */
         $request = request();
 
-        $to = static::getTo();
+        $to = config('crash-reporter.email.to', null);
         $message = $exception->getMessage();
         $file = $exception->getFile();
         $line = $exception->getLine();
@@ -30,7 +26,7 @@ class CrashReporter {
             static::sendHttp($message, $file, $line, $trace, $url, $body, $ip, $method, $userAgent);
         }
 
-        if (config('crash-reporter.channels.email', false)) {
+        if (config('crash-reporter.channels.email', false) && !empty($to)) {
             static::sendEmail($to, $message, $file, $line, $trace, $url, $body, $ip, $method, $userAgent);
         }
     }
