@@ -38,6 +38,10 @@
 			padding: 15px;
 			border-bottom: 1px solid #DDD;
 			font-weight: bold;
+			position: sticky;
+			top: 0;
+			background: #FFF;
+			z-index: 10;
 		}
 
 		.card-body {
@@ -57,8 +61,8 @@
 			display: block;
 			white-space: pre;
 			padding: 10px;
-			background: #e888;
-			border: 3px dashed #eaa;
+			background: #e8e8e8;
+			border: 3px dashed #c7c7c7;
 			line-height: 20px;
 			overflow: auto;
 			border-radius: 10px;
@@ -66,6 +70,52 @@
 
 		.break-words {
 			word-wrap: break-word;
+		}
+
+		.logo {
+			height: 30px;
+			width: 30px;
+		}
+
+		.table-wrapper {
+			max-width: 100%;
+			overflow: auto;
+		}
+
+		th {
+			text-align: left;
+			min-width: 100px;
+			padding: 5px;
+			position: sticky;
+			left: 0;
+			background: #FFF;
+			border-right: 1px solid #DDD;
+		}
+
+		td {
+			display: table-cell;
+			overflow: auto;
+			max-width: 100%;
+			padding: 5px;
+		}
+
+		td, th {
+			border-bottom: 1px solid #DDD;
+		}
+
+		.image-with-label {
+			display: flex;
+			align-items: center;
+			gap: 1rem;
+		}
+
+		p.line-clamp {
+			display: -webkit-box;
+			-webkit-line-clamp: 2;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+			font-size: 12px;
+			font-family: monospace;
 		}
 
 		@media only screen and (max-width: 980px) {
@@ -78,21 +128,93 @@
 </head>
 <body>
 	<div class="container">
+		<h1>{{ config('app.name') }}</h1>
+		<h2>Unexpected Error Occured</h2>
 		<div class="card">
 			<div class="card-header">Request Details</div>
 			<div class="card-body">
 				<p class="details">
-					There was a crash in your application ({{ $data->url }}) at {{ now()->toDateTimeString() }}.
+					There was a crash in your application at {{ now()->toDateTimeString() }}.
 				</p>
 				<div class="card">
 					<div class="card-body">
-						<p class="truncate">URL: {{ $data->url }}</p>
-						<p class="truncate">Method: {{ $data->method }}</p>
-						<p class="truncate">IP: {{ $data->ip }}</p>
-						<p class="truncate">Agent: {{ $data->agent }}</p>
+						<div class="table-wrapper">
+							<table>
+								<tbody>
+									<tr>
+										<th>
+											<span>URL</span>
+										</th>
+										<td>{{ $data?->url }}</td>
+									</tr>
+									<tr>
+										<th>
+											<span>Referrer URL </span>
+										</th>
+										<td>
+											{{ $data?->referer ?? 'None' }}
+										</td>
+									</tr>
+									<tr>
+										<th>
+											<span>Method</span>
+										</th>
+										<td>
+											{{ $data?->method }}
+										</td>
+									</tr>
+									<tr>
+										<th>
+											<span>IP</span>
+										</th>
+										<td>
+											{{ $data?->ip }}
+										</td>
+									</tr>
+									<tr>
+										<th>
+											<span>Browser</span>
+										</th>
+										<td>
+											<div class='image-with-label'>
+												<span>{{ $data?->browser ?? 'Unknown' }}</span>
+												@if($data?->browser_logo) <img class="logo" src="{{ $data->browser_logo }}" /> @endif
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<th>
+											<span>OS</span>
+										</th>
+										<td>
+											<div class='image-with-label'>
+												<span>{{ $data?->os ?? 'Unknown' }}</span>
+												@if($data?->os_logo) <img class="logo" src="{{ $data->os_logo }}" /> @endif
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<th>
+											<span>User Agent</span>
+										</th>
+										<td>
+											<p class="line-clamp">{{ $data?->userAgent }}</p>
+										</td>
+									</tr>
+									<tr>
+										<th>
+											<span>User</span>
+										</th>
+										<td>
+											<p class="line-clamp">{{ $data?->user }}</p>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
 						<div>
-							<p>Body:</p>
-							<code class="whitespace-pre-wrap">{{ $data->body }}</code>
+							<p>Body</p>
+							<code class="whitespace-pre-wrap">{{ $data?->body }}</code>
 						</div>
 					</div>
 				</div>
@@ -102,20 +224,20 @@
 			<div class="card-header">Exception Details</div>
 			<div class="card-body">
 				<div>
-					<h3>Message:</h3>
+					<h3>Message</h3>
 					<p>
-						{{ $data->message }}
+						{{ $data?->message }}
 					</p>
 				</div>
 				<div>
-					<h3>File:</h3>
+					<h3>File</h3>
 					<p class="break-words">
-						{{ $data->file }}:{{ $data->line }}
+						{{ $data?->file }}:{{ $data?->line }}
 					</p>
 				</div>
 				<p>
-					<h3>Trace:</h3>
-					<code>{{ $data->trace }}</code>
+					<h3>Trace</h3>
+					<code>{{ $data?->trace }}</code>
 				</p>
 			</div>
 		</div>
