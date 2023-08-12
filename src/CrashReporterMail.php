@@ -28,6 +28,17 @@ class CrashReporterMail extends Mailable {
     ) {
     }
 
+    /**
+     * Get the sender email address or generate one from server url.
+     */
+    public function getSenderEmailAddress(): string {
+        return config(
+            'crash-reporter.from.email',
+            config(
+                'mail.from.address',
+                sprintf('laravel-crash-reporter@%s', $_SERVER['HTTP_HOST'] ?? 'localhost')
+            )
+        );
     }
 
     /**
@@ -38,7 +49,7 @@ class CrashReporterMail extends Mailable {
     public function build() {
         return $this
             ->subject(sprintf('Crash Report - %s', $this->message))
-            ->from(config('crash-reporter.from.address'), config('crash-reporter.from.name'))
+            ->from($this->getSenderEmailAddress(), config('crash-reporter.from.name', 'Laravel Crash Reporter'))
             ->view('crash-reporter::crash-reporter-mail')
             ->with('data', (object) [
                 'message' => $this->message,
