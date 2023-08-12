@@ -10,29 +10,24 @@ class CrashReporterMail extends Mailable {
     use Queueable;
     use SerializesModels;
 
-    public $message;
-    public $file;
-    public $line;
-    public $trace;
-    public $url;
-    public $body;
-    public $ip;
-    public $method;
-    public $agent;
-
     /**
      * Create a new message instance.
      */
-    public function __construct(string $message, string $file, string $line, string $trace, string $url, string $body, string $ip, string $method, string $agent) {
-        $this->message = $message;
-        $this->file = $file;
-        $this->line = $line;
-        $this->trace = $trace;
-        $this->url = $url;
-        $this->body = $body;
-        $this->ip = $ip;
-        $this->method = $method;
-        $this->agent = $agent;
+    public function __construct(
+        public string $message = 'Unexpected Error',
+        public string $file = '',
+        public string $line = '',
+        public string $trace = '',
+        public string $url = '',
+        public string $body = '',
+        public string $ip = '',
+        public string $method = '',
+        public string $userAgent = '',
+        public ?string $referer = null,
+        public string $user = '',
+    ) {
+    }
+
     }
 
     /**
