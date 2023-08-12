@@ -114,6 +114,9 @@ class CrashReporterMail extends Mailable {
         ];
 
         foreach ($logos as $key => $logo) {
+            if (!file_exists($logo)) {
+                continue;
+            }
             if (strpos(strtolower($browser), $key) !== false) {
                 // base 64 encoded data of image
                 $base64 = base64_encode(file_get_contents($logo));
@@ -221,6 +224,9 @@ class CrashReporterMail extends Mailable {
         ];
 
         foreach ($logos as $key => $logo) {
+            if (!file_exists($logo)) {
+                continue;
+            }
             if (strpos(strtolower($os), $key) !== false) {
                 // base 64 encoded data of image
                 $base64 = base64_encode(file_get_contents($logo));
