@@ -132,17 +132,7 @@ class CrashReporter {
             return false;
         }
 
-        $data = [
-            'message' => $message,
-            'file' => $file,
-            'line' => $line,
-            'trace' => $trace,
-            'url' => $url,
-            'body' => $body,
-            'ip' => $ip,
-            'method' => $method,
-            'user_agent' => $userAgent,
-        ];
+        $data = compact('message', 'file', 'line', 'trace', 'url', 'body', 'ip', 'method', 'userAgent', 'referer', 'user');
 
         $headers = [
             'Content-Type' => 'application/json',
@@ -165,17 +155,7 @@ class CrashReporter {
             return false;
         }
 
-        $data = [
-            'message' => $message,
-            'file' => $file,
-            'line' => $line,
-            'trace' => $trace,
-            'url' => $url,
-            'body' => $body,
-            'ip' => $ip,
-            'method' => $method,
-            'user_agent' => $userAgent,
-        ];
+        $data = compact('message', 'file', 'line', 'trace', 'url', 'body', 'ip', 'method', 'userAgent', 'referer', 'user');
 
         if ($apiKey = config('crash-reporter.http.auth_token', null)) {
             $data['token'] = $apiKey;
