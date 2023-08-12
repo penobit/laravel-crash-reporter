@@ -2,6 +2,7 @@
 
 Laravel crash reporter library will notify you about any uncaught exceptions in your laravel application by Sending you an email or making a POST/GET HTTP request to an endpoint
 
+
 ### Installation
 
 You can install Laravel Crash Reporter package simply using the Composer
@@ -18,6 +19,8 @@ php artisan vendor:publish --tag config
 ```
 
 This cmd will publish a new file `crash-reporter.php` to your `app/config` directory
+
+----
 
 ### Configuration
 
@@ -42,8 +45,10 @@ The token will be sent in two different ways based on HTTP request method:
 - GET: the token will be added to the url's query string like: `api.penobit.com/report/crash?token=MY_TOKEN_FROM_ENV_FILE`
 - POST: the token will be sent as an authorization bearer header: `Authorization: Bearer MY_TOKEN_FROM_ENV_FILE`
 
+----
 
-#### Customizations
+### Customizations
+
 You can customize the email template by creating a new template in your `views` directory.
 just create your custom email template template in this path:
 `/resources/views/vendor/penobit/crash-reporter/crash-reporter-mail.blade.php`
