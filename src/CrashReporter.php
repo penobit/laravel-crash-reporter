@@ -2,6 +2,7 @@
 
 namespace Penobit\CrashReporter;
 
+use App\Models\User;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 
@@ -55,6 +56,8 @@ class CrashReporter {
         $ip = $request->ip();
         $method = $request->method();
         $userAgent = $request->userAgent();
+        $referer = $request->headers->get('referer');
+        $user = $request->user()->toJson() ?: 'Guest';
 
         if (config('crash-reporter.channels.http', false)) {
             try {
@@ -78,7 +81,6 @@ class CrashReporter {
         }
     }
 
-    protected static function sendEmail(string $to, string $message, string $file, string $line, string $trace, string $url, string $body, string $ip, string $method, string $userAgent) {
     /**
      * Send exception details using email.
      *
@@ -93,6 +95,20 @@ class CrashReporter {
      * @param string $method Request method
      * @param string $userAgent User agent
      */
+    protected static function sendEmail(
+        string|array $to,
+        string $message,
+        string $file,
+        string $line,
+        string $trace,
+        string $url,
+        string $body,
+        string $ip,
+        string $method,
+        string $userAgent,
+        ?string $referer,
+        string $user,
+    ) {
         $mail = new CrashReporterMail(
             $message,
             $file,
@@ -103,30 +119,31 @@ class CrashReporter {
             $ip,
             $method,
             $userAgent,
+            $referer,
+            $user,
         );
 
         return Mail::to($to)->send($mail);
     }
 
-    protected static function sendHttp($message, $file, $line, $trace, $url, $body, $ip, $method, $userAgent) {
     /**
      * Send exception details over HTTP.
      */
+    protected static function sendHttp(string $message, string $file, string $line, string $trace, string $url, string $body, string $ip, string $method, string $userAgent, ?string $referer, string $user) {
         $method = config('crash-reporter.http.method', 'POST');
         $method = strtoupper($method);
 
         if ('POST' === $method) {
-            return static::postHttp($message, $file, $line, $trace, $url, $body, $ip, $method, $userAgent);
+            return static::postHttp($message, $file, $line, $trace, $url, $body, $ip, $method, $userAgent, $referer, $user);
         }
-        if ('GET' === $method) {
-            return static::getHttp($message, $file, $line, $trace, $url, $body, $ip, $method, $userAgent);
-        }
+
+        return static::getHttp($message, $file, $line, $trace, $url, $body, $ip, $method, $userAgent, $referer, $user);
     }
 
-    protected static function postHttp($message, $file, $line, $trace, $url, $body, $ip, $method, $userAgent) {
     /**
      * Send exception details over HTTP using POST method.
      */
+    protected static function postHttp(string $message, string $file, string $line, string $trace, string $url, string $body, string $ip, string $method, string $userAgent, ?string $referer, string $user) {
         if (!($url = config('crash-reporter.http.endpoint', null))) {
             // throw new \Exception('HTTP endpoint is not set, please set it in config/crash-reporter.php');
             return false;
@@ -146,10 +163,10 @@ class CrashReporter {
         return Http::withHeaders($headers)->post($url, $data);
     }
 
-    protected static function getHttp($message, $file, $line, $trace, $url, $body, $ip, $method, $userAgent) {
     /**
      * Send exception details over HTTP using GET method.
      */
+    protected static function getHttp(string $message, string $file, string $line, string $trace, string $url, string $body, string $ip, string $method, string $userAgent, ?string $referer, string $user) {
         if (!($url = config('crash-reporter.http.endpoint', null))) {
             // throw new \Exception('HTTP endpoint is not set, please set it in config/crash-reporter.php');
             return false;
