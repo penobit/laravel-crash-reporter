@@ -9,6 +9,11 @@ class CrashReporter {
     /**
      * Handle thrown exception.
      */
+    public static function handle(\Throwable $exception): void {
+        if (config('crash-reporter.enabled', false) === false) {
+            return;
+        }
+
         /** @var \Illuminate\Http\Request $request */
         $request = request();
 
