@@ -24,8 +24,8 @@ return [
         * Required for E-mail channel
         */
         'from' => [
-            'address' => env('MAIL_FROM_ADDRESS'),
-            'name' => env('MAIL_FROM_NAME', 'Crash Reporter'),
+            'address' => env('CRASH_REPORTER_FROM_EMAIL', env('MAIL_FROM_ADDRESS')),
+            'name' => env('CRASH_REPORTER_FROM_NAME', env('MAIL_FROM_NAME', 'Laravel Crash Reporter')),
         ],
 
         /*
@@ -56,6 +56,6 @@ return [
          * In GET requests a query parameter named "token" will be added to the url
          * If you don't want to use token, set it to null
          */
-        'token' => null,
+        'token' => env('CRASH_REPORTER_HTTP_TOKEN', null),
     ],
 ];
