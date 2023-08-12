@@ -6,7 +6,9 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 
 class CrashReporter {
-    public static function handle(\Throwable $exception) {
+    /**
+     * Handle thrown exception.
+     */
         /** @var \Illuminate\Http\Request $request */
         $request = request();
 
@@ -32,6 +34,20 @@ class CrashReporter {
     }
 
     protected static function sendEmail(string $to, string $message, string $file, string $line, string $trace, string $url, string $body, string $ip, string $method, string $userAgent) {
+    /**
+     * Send exception details using email.
+     *
+     * @param array<string>|string $to Email address or array of email addresses
+     * @param string $message Exception message
+     * @param string $file File where exception was thrown
+     * @param string $line Line where exception was thrown
+     * @param string $trace Exception trace
+     * @param string $url URL where exception was thrown
+     * @param string $body Request body
+     * @param string $ip IP address of the user
+     * @param string $method Request method
+     * @param string $userAgent User agent
+     */
         $mail = new CrashReporterMail(
             $message,
             $file,
@@ -48,6 +64,9 @@ class CrashReporter {
     }
 
     protected static function sendHttp($message, $file, $line, $trace, $url, $body, $ip, $method, $userAgent) {
+    /**
+     * Send exception details over HTTP.
+     */
         $method = config('crash-reporter.http.method', 'POST');
         $method = strtoupper($method);
 
@@ -60,6 +79,9 @@ class CrashReporter {
     }
 
     protected static function postHttp($message, $file, $line, $trace, $url, $body, $ip, $method, $userAgent) {
+    /**
+     * Send exception details over HTTP using POST method.
+     */
         if (!($url = config('crash-reporter.http.endpoint', null))) {
             // throw new \Exception('HTTP endpoint is not set, please set it in config/crash-reporter.php');
             return false;
@@ -90,6 +112,9 @@ class CrashReporter {
     }
 
     protected static function getHttp($message, $file, $line, $trace, $url, $body, $ip, $method, $userAgent) {
+    /**
+     * Send exception details over HTTP using GET method.
+     */
         if (!($url = config('crash-reporter.http.endpoint', null))) {
             // throw new \Exception('HTTP endpoint is not set, please set it in config/crash-reporter.php');
             return false;
