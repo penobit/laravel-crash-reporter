@@ -18,6 +18,7 @@ class CrashReporter {
         $request = request();
 
         $to = config('crash-reporter.email.to', null);
+        $to = \is_string($to) ? explode(';', $to) : $to;
         $message = $exception->getMessage();
         $file = $exception->getFile();
         $line = $exception->getLine();
