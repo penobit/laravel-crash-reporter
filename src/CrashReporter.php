@@ -24,6 +24,32 @@ class CrashReporter {
         $line = $exception->getLine();
         $trace = $exception->getTraceAsString();
 
+        if (empty($to)) {
+            info('penobit/laravel-crash-reporter: $to is empty', [
+                'to' => $to,
+            ]);
+
+            return;
+        }
+
+        if (!\is_array($to)) {
+            info('penobit/laravel-crash-reporter: $to is not an array of recipients', [
+                'to' => $to,
+            ]);
+
+            return;
+        }
+
+        foreach ($to as $mail) {
+            if (!filter_var($mail, FILTER_VALIDATE_EMAIL)) {
+                info('penobit/laravel-crash-reporter: $to is not an array of valid email addresses', [
+                    'to' => $to,
+                ]);
+
+                return;
+            }
+        }
+
         $url = $request->url();
         $body = json_encode($request->all(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
         $ip = $request->ip();
