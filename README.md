@@ -54,12 +54,16 @@ just create your custom email template template in this path:
 `/resources/views/vendor/penobit/crash-reporter/crash-reporter-mail.blade.php`
 and the crash reporter uses that instead of the default email template.
 You can also use these `$data` variable that is an object containing the exceptions details:
-- `$data->message`: The Exception message
-- `$data->file`: The File where exception was thrown
-- `$data->line`: The Line where exception was thrown
-- `$data->trace`: The Exception trace
-- `$data->url`: The URL where exception was thrown
-- `$data->body`: The Request body
-- `$data->ip`: The IP address of the user
-- `$data->method`: The Request method
-- `$data->userAgent`: The Users's User agent
+- `$data->message`: Exception message
+- `$data->file`: File where exception was thrown
+- `$data->line`: Line where exception was thrown
+- `$data->trace`: Exception trace
+- `$data->url`: URL where exception was thrown
+- `$data->body`: Request body
+- `$data->ip`: IP address of the user
+- `$data->method`: Request method
+- `$data->userAgent`: Users's User agent
+- `$data->browser`: User's browser name
+- `$data->browser_logo`: User's browser logo base64 encoded URI 
+- `$data->os`: User's OS name
+- `$data->os_logo`: User's OS logo base64 encoded URI 
