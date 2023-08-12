@@ -57,11 +57,24 @@ class CrashReporter {
         $userAgent = $request->userAgent();
 
         if (config('crash-reporter.channels.http', false)) {
-            static::sendHttp($message, $file, $line, $trace, $url, $body, $ip, $method, $userAgent);
+            try {
+                static::sendHttp($message, $file, $line, $trace, $url, $body, $ip, $method, $userAgent, $referer, $user);
+            } catch (\Throwable $e) {
+                info('penobit/laravel-crash-reporter: Failed to send http request', [
+                    'exception' => $e,
+                ]);
+            }
         }
 
         if (config('crash-reporter.channels.email', false) && !empty($to)) {
-            static::sendEmail($to, $message, $file, $line, $trace, $url, $body, $ip, $method, $userAgent);
+            try {
+                static::sendEmail($to, $message, $file, $line, $trace, $url, $body, $ip, $method, $userAgent, $referer, $user);
+            } catch (\Throwable $e) {
+                info('penobit/laravel-crash-reporter: Failed to send email', [
+                    'to' => $to,
+                    'exception' => $e,
+                ]);
+            }
         }
     }
 
