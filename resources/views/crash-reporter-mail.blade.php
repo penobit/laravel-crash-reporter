@@ -177,8 +177,8 @@
 										</th>
 										<td>
 											<div class='image-with-label'>
-												<span>{{ $data?->browser ?? 'Unknown' }}</span>
 												@if($data?->browser_logo) <img class="logo" src="{{ $data->browser_logo }}" /> @endif
+												<span>{{ $data?->browser ?? 'Unknown' }}</span>
 											</div>
 										</td>
 									</tr>
@@ -188,8 +188,8 @@
 										</th>
 										<td>
 											<div class='image-with-label'>
-												<span>{{ $data?->os ?? 'Unknown' }}</span>
 												@if($data?->os_logo) <img class="logo" src="{{ $data->os_logo }}" /> @endif
+												<span>{{ $data?->os ?? 'Unknown' }}</span>
 											</div>
 										</td>
 									</tr>
